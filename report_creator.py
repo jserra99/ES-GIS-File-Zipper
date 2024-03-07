@@ -14,18 +14,26 @@ import shutil
 options = Options()
 options.add_experimental_option("detach", True)
 
-
+# download_directory = str(input("Please copy/paste the export directory path: "))
 download_directory = "C:\\Users\\redst\\Desktop\\DSL_PDF_EXPORT"
 
 
 url = 'https://tools.oregonexplorer.info/OE_HtmlViewer/Index.html?viewer=renewable'
 
+# directory = str(input("Please copy/paste the source directory path containing the zip files: "))
 directory = "C:\\Users\\redst\\Downloads\\Zipped"
 zip_list = []
-
 for root, directories, files, in os.walk(directory):
         for file in files:
             zip_list.append(file)
+
+completed_list = []
+for root, directories, files, in os.walk(download_directory):
+        for file in files:
+            completed_list.append(file)
+
+zip_list = zip_list - completed_list
+zip_list_len = len(zip_list)
 
 class FileProcessingThread(threading.Thread):
     def __init__(self, currentIndex: int, jump: int):
