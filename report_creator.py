@@ -1,3 +1,6 @@
+''' Created by Joseph Serra, student in EECS @Oregon State University. 
+Source: https://github.com/jserra99/ES-GIS-File-Zipper '''
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -5,22 +8,17 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import ElementClickInterceptedException, NoSuchWindowException
 from time import sleep
 import os
 import threading
 import shutil
 
-
-
-# download_directory = str(input("Please copy/paste the export directory path: "))
-download_directory = "C:\\Users\\redst\\Desktop\\DSL_PDF_EXPORT"
-
+download_directory = str(input("Please copy/paste the export directory path: "))
 
 url = 'https://tools.oregonexplorer.info/OE_HtmlViewer/Index.html?viewer=renewable'
 
-# directory = str(input("Please copy/paste the source directory path containing the zip files: "))
-directory = "C:\\Users\\redst\\Downloads\\Zipped"
+directory = str(input("Please copy/paste the source directory path containing the zip files: "))
+
 temp = []
 for root, directories, files, in os.walk(directory):
         for file in files:
@@ -67,17 +65,9 @@ class FileProcessingThread(threading.Thread):
             while not file_processing_done:
                 try:
                     driver.get(url)
-                    #driver.maximize_window()
-                    #sleep(20)
-                    # close_splash = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.CLASS_NAME, "panel-header-button right close-16 bound-visible")))
-                    """close_splash = driver.find_element(By.CLASS_NAME, "panel-header-button right close-16 bound-visible")
-                    close_splash.click()"""
 
-                    # clicking splash screen button
-                    #oeFormActionsRow = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.CLASS_NAME, "oeFormActionsRow")))
+                    # clicking splash screen button, webdriver wait doesn't work here because of the initial loading screen, waiting is the only way around it
                     sleep(20)
-                    # WebDriverWait(driver, 40).until(EC.visibility_of_element_located((By.CLASS_NAME, "oeFormActionsRow")))
-                    # WebDriverWait(driver, 40).until(EC.element_to_be_clickable((By.CLASS_NAME, "oeFormActionsRow")))
                     driver.find_elements(By.CLASS_NAME, "oeFormActionsRow")[1].find_elements(By.TAG_NAME, "button")[1].click()
                     sleep(2)
 
@@ -160,7 +150,7 @@ class FileProgressThread(threading.Thread):
             print(f"Percent Complete: {percentComplete}%")
 
 threads = []
-num_threads_and_indice = 8
+num_threads_and_indice = int(input("How many threads would you like to run?: "))
 
 for i in range(num_threads_and_indice):
     t = FileProcessingThread(i, num_threads_and_indice)
@@ -169,7 +159,7 @@ for i in range(num_threads_and_indice):
 t_main = FileProgressThread(len(completed_list), len(temp))
 t_main.start()
 threads.append(t_main)
-    
+
 for t in threads:
     t: threading.Thread
     t.join()
