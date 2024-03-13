@@ -1,5 +1,5 @@
 ''' Created by Joseph Serra, student in EECS @Oregon State University. 
-Source: https://github.com/jserra99/ES-GIS-File-Zipper '''
+Source: https://github.com/jserra99/ES-GIS-File-Zipper/tree/multithread_testing '''
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
